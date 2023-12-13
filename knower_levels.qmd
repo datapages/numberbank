@@ -1,0 +1,151 @@
+---
+title: Knower Levels
+grid:
+  sidebar-width: 0px
+  body-width: 1400px
+  margin-width: 0px
+---
+
+```{r}
+library(dplyr)
+library(forcats)
+```
+
+```{r}
+#| cache: true
+
+dataset <- redivis::user("stanford_templates")$dataset("numberbank")
+
+datasets <- dataset$table("datasets")$to_tibble()
+subjects <- dataset$table("subjects")$to_tibble()
+trials <- dataset$table("trials")$to_tibble()
+```
+
+```{r}
+#| cache: true
+
+# TODO: fix upstream?
+dataset_methods <- datasets |>
+  distinct(dataset_id, method) |>
+  group_by(dataset_id) |>
+  summarise(method = paste(method, collapse = ", "))
+
+language_recode <- list(
+  "Arabic" = "Saudi",
+  "French" = "Français",
+  "English" = c("Anglais", "English (India)", "English (US)", "English/Portugese", "English/Spanish"),
+  "Slovenian (dual)" = "Slovenian_dual",
+  "Slovenian (non-dual)" = c("Slovenian", "Slovenian_nonDual", "Serbian/Slovenian")
+)
+
+kl_data <- subjects |>
+  left_join(dataset_methods) |>
+  rename_with(str_to_lower) |>
+  mutate(across(where(is_character), \(x) na_if(x, "NA")),
+         kl = kl |> factor() |> fct_relabel(\(l) paste0(l, "-knower")),
+         kl_subset = if_else(kl == "CP-knower", kl, "Subset-knower"),
+         highest_count = as.numeric(highest_count),
+         age_months = as.numeric(age_months)) |>
+  filter(!is.na(kl) | !is.na(highest_count)) |>
+  mutate(language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
+         language_country = paste(language, country, sep = "\n"))
+```
+
+```{r}
+ojs_define(kl_data = kl_data)
+```
+
+```{ojs}
+Plot = import("https://esm.sh/@observablehq/plot")
+import {interval} from '@mootari/range-slider'
+
+kl = transpose(kl_data)
+```
+
+```{ojs}
+//| panel: sidebar
+
+// facets
+viewof fs = Inputs.checkbox(["language", "country", "method"],
+                            {value: ["language"], label: "Facet by..."})
+fx = fs.includes("method") ? "method" : null // fx = "method" or null
+fy = fs.filter(x => x !== "method").join("_") // fy = "language", "country", "language_country", null
+
+// age filter
+viewof ages = interval([d3.min(kl_data.age_months), d3.max(kl_data.age_months)],
+                       {step: 1, label: "Age (months)"})
+
+// language filter
+lang_vals = Array.from(new Set(kl_data.language)).sort()
+lang_defs = ["English"]
+viewof langs = Inputs.select(lang_vals, {label: "Languages", multiple: true, value: lang_defs})
+
+// country filter
+country_vals = Array.from(new Set(kl_data.country)).sort()
+country_defs = ["United States", "India", "Canada"]
+viewof countries = Inputs.select(country_vals, {label: "Countries", multiple: true, value: country_defs})
+
+// kl filter
+kl_vals = Array.from(new Set(kl_data.kl)).sort()
+kl_defs = kl_vals.filter(s => /^[123C]/.test(s))
+viewof kls = Inputs.select(kl_vals, {label: "Knower levels", multiple: true, value: kl_defs})
+
+// kl subset toggle
+viewof kl_sub = Inputs.toggle({label: "Group non-CP-knowers together"})
+y = kl_sub ? "kl_subset" : "kl"
+
+// dataset filter
+dataset_vals = Array.from(new Set(kl_data.dataset_id)).sort()
+dataset_defs = dataset_vals
+viewof datasets = Inputs.select(dataset_vals, {label: "Datasets", multiple: true, value: dataset_defs})
+```
+
+```{ojs}
+//| panel: fill
+
+klf = kl.filter(d => langs.includes(d.language))
+        .filter(d => countries.includes(d.country))
+        .filter(d => kls.includes(d.kl))
+        .filter(d => d.age_months >= ages[0] && d.age_months <= ages[1])
+
+Plot.plot({
+  style: {fontFamily: "Source Sans Pro"},
+  marginLeft: 80,
+  marginRight: 80,
+  //height: 400,
+  x: {
+    label: "Age (months)",
+    grid: true,
+    inset: 6
+  },
+  y: {
+    label: "Knower levels"
+    //label: null,
+    //tickFormat: null
+  },
+  fx: {
+    label: null
+  },
+  fy: {
+    label: null
+  },
+  //color: {legend: true},
+  //facet: {data: klf, x: fx, y: fy, label: null},
+  marks: [
+    Plot.frame(),
+    //Plot.dot(klf, Plot.dodgeY("middle", {
+    //  x: "age_months",
+    //  y: y,
+    //  fy: "kl",
+    //  fill: "kl" })
+    //),
+    Plot.boxX(klf, {
+      x: "age_months",
+      y: y,
+      //fy: "kl",
+      fx: fx,
+      fy: fy,
+      fill: "kl" })
+  ]
+})
+```

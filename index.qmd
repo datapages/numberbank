@@ -1,0 +1,28 @@
+---
+title: Numberbank
+subtitle: Collaborative Database of Children's Numerical Language
+description: |
+  Numberbank includes numeracy data from 3200 children across 13 languages around the world. NumberBank operates in collaboration with the ManyNumbers consortium of 100+ international researchers interested in early numerical development.
+title-block-banner: "#859900"
+title-block-banner-color: white
+page-footer: "bem"
+---
+
+![](img/dotsLogoStatic.png){width=80%}
+
+## Datasets in Numberbank
+
+<iframe width="800" height="500" allowfullscreen src="https://redivis.com/embed/tables/1h35-30xjk0569#cells" style="border:0;"></iframe>
+
+:::: {layout="[ 10, 90 ]"}
+
+::: {}
+![](img/nsf_logo.png)
+:::
+
+::: {.disclaimer}
+This material is based upon work supported by the National Science Foundation under Grant No. 221960.
+Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
+:::
+
+::::

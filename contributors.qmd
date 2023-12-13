@@ -1,0 +1,19 @@
+---
+title: Contributors
+---
+
+## The Numberbank Team
+
+::: {layout-ncol=4}
+
+![[Lauren Oey](https://la-oey.github.io)](img/oey.png)
+
+![[Rose Schneider](https://rosemschneider.github.io)](img/schneider.jpeg)
+
+![[David Barner](https://www.ladlab.com/barner)](img/barner.jpeg)
+
+![[Mike Frank](https://web.stanford.edu/~mcfrank)](img/mike.jpg)
+
+:::
+
+## Current Datasets

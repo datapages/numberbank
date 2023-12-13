@@ -1,0 +1,28 @@
+project:
+  type: website
+
+website:
+  title: "Numberbank"
+  navbar:
+    left:
+      - text: Give-N
+        menu: 
+          - knower_levels.qmd
+          - item_viz.qmd
+      - highest_count.qmd
+      - methods.qmd
+      - contributors.qmd
+      - submit.qmd
+    tools:
+      - icon: github
+        href: https://github.com/langcog/numberbank
+
+format:
+  html:
+    theme: [cosmo, scss/global.scss]
+
+execute: 
+  echo: false
+  message: false
+  warning: false
+  error: false

@@ -1,0 +1,11 @@
+---
+title: Submit Data
+---
+
+Numberbank uses a tidy format for encoding data. In order to submit data, we suggest that you enter it in this format at the time of data collection, using the templates provided below. We will also accept data in other forms, if the data have already been collected and do not match this format. For each template, we have entered example data for two participants. Researchers can download these templates, erase example data, and enter their own.
+
+[knower level template](https://docs.google.com/spreadsheets/d/1vR7xJgVL9Fotpwcz4lQSfZDWqmldORVg-RDPdI9UXuA/edit?usp=sharing): data on individual subjects and their knower level
+		
+[trial level template](https://docs.google.com/spreadsheets/d/1sWw-tr97CDrF0VIp8YUOiYjpc__lnWU-ftTHkDteYEs/edit?usp=sharing): data on subjects' trial by trial responses when prompted to give N
+		
+[highest count template](https://docs.google.com/spreadsheets/d/1ijHUS8J625tThqEqEuQw1j5uUjiZDdle4PGUhfQwl-I/edit?usp=sharing): data on individual subjects and the highest number they can count up to

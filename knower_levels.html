@@ -184,10 +184,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="59" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 58;"><span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>Plot <span class="op">=</span> <span class="im">import</span>(<span class="st">"https://esm.sh/@observablehq/plot"</span>)</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> {interval} <span class="im">from</span> <span class="st">'@mootari/range-slider'</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>kl <span class="op">=</span> <span class="fu">transpose</span>(kl_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="60" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 59;"><span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>Plot <span class="op">=</span> <span class="im">import</span>(<span class="st">"https://esm.sh/@observablehq/plot"</span>)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> {interval} <span class="im">from</span> <span class="st">'@mootari/range-slider'</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>kl <span class="op">=</span> <span class="fu">transpose</span>(kl_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -211,39 +211,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="panel-grid layout-sidebar ms-md-0 layout-sidebar-left">
-<div class="cell panel-sidebar card bg-light p-2 g-col-24 g-col-lg-7">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="69" data-source-offset="-11"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 68;"><span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>viewof fs <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"language"</span><span class="op">,</span> <span class="st">"country"</span><span class="op">,</span> <span class="st">"method"</span>]<span class="op">,</span></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>                            {<span class="dt">value</span><span class="op">:</span> [<span class="st">"language"</span>]<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Facet by..."</span>})</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>fx <span class="op">=</span> fs<span class="op">.</span><span class="fu">includes</span>(<span class="st">"method"</span>) <span class="op">?</span> <span class="st">"method"</span> <span class="op">:</span> <span class="kw">null</span> <span class="co">// fx = "method" or null</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>fy <span class="op">=</span> fs<span class="op">.</span><span class="fu">filter</span>(x <span class="kw">=&gt;</span> x <span class="op">!==</span> <span class="st">"method"</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">"_"</span>) <span class="co">// fy = "language", "country", "language_country", null</span></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="co">// age filter</span></span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>viewof ages <span class="op">=</span> <span class="fu">interval</span>([d3<span class="op">.</span><span class="fu">min</span>(kl_data<span class="op">.</span><span class="at">age_months</span>)<span class="op">,</span> d3<span class="op">.</span><span class="fu">max</span>(kl_data<span class="op">.</span><span class="at">age_months</span>)]<span class="op">,</span></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>                       {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Age (months)"</span>})</span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="co">// language filter</span></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>lang_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">language</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>lang_defs <span class="op">=</span> [<span class="st">"English"</span>]</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>viewof langs <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(lang_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Languages"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> lang_defs})</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="co">// country filter</span></span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>country_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">country</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>country_defs <span class="op">=</span> [<span class="st">"United States"</span><span class="op">,</span> <span class="st">"India"</span><span class="op">,</span> <span class="st">"Canada"</span>]</span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>viewof countries <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(country_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Countries"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> country_defs})</span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="co">// kl filter</span></span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>kl_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">kl</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>kl_defs <span class="op">=</span> kl_vals<span class="op">.</span><span class="fu">filter</span>(s <span class="kw">=&gt;</span> <span class="ss">/</span><span class="sc">^[123C]</span><span class="ss">/</span><span class="op">.</span><span class="fu">test</span>(s))</span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>viewof kls <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(kl_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Knower levels"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> kl_defs})</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="co">// kl subset toggle</span></span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>viewof kl_sub <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">toggle</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"Group non-CP-knowers together"</span>})</span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> kl_sub <span class="op">?</span> <span class="st">"kl_subset"</span> <span class="op">:</span> <span class="st">"kl"</span></span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="co">// dataset filter</span></span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>dataset_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">dataset_id</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>dataset_defs <span class="op">=</span> dataset_vals</span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>viewof datasets <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(dataset_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Datasets"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> dataset_defs})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="panel-sidebar card bg-light p-2 g-col-24 g-col-lg-7">
+<p><strong>Facet by…</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="71" data-source-offset="-10"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 70;"><span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>viewof fs <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"language"</span><span class="op">,</span> <span class="st">"country"</span><span class="op">,</span> <span class="st">"method"</span>]<span class="op">,</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>                            {<span class="dt">value</span><span class="op">:</span> [<span class="st">"language"</span>]})</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>fx <span class="op">=</span> fs<span class="op">.</span><span class="fu">includes</span>(<span class="st">"method"</span>) <span class="op">?</span> <span class="st">"method"</span> <span class="op">:</span> <span class="kw">null</span> <span class="co">// fx = "method" or null</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>fy <span class="op">=</span> fs<span class="op">.</span><span class="fu">filter</span>(x <span class="kw">=&gt;</span> x <span class="op">!==</span> <span class="st">"method"</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -265,160 +239,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-4" data-nodetype="declaration">
-
 </div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-5" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-6" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-7" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-8" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-9" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-10" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-11" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-12" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-13" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-14" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-15" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-16" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-17" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-18" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-</div>
-<div class="panel-fill panel-grid g-col-24 g-col-lg-17 pt-3 pt-lg-0">
-<div class="g-col-24">
-<div class="cell panel-fill">
-<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="106" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 105;"><span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>klf <span class="op">=</span> kl<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> langs<span class="op">.</span><span class="fu">includes</span>(d<span class="op">.</span><span class="at">language</span>))</span>
-<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> countries<span class="op">.</span><span class="fu">includes</span>(d<span class="op">.</span><span class="at">country</span>))</span>
-<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> kls<span class="op">.</span><span class="fu">includes</span>(d<span class="op">.</span><span class="at">kl</span>))</span>
-<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">age_months</span> <span class="op">&gt;=</span> ages[<span class="dv">0</span>] <span class="op">&amp;&amp;</span> d<span class="op">.</span><span class="at">age_months</span> <span class="op">&lt;=</span> ages[<span class="dv">1</span>])</span>
-<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Source Sans Pro"</span>}<span class="op">,</span></span>
-<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">80</span><span class="op">,</span></span>
-<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">80</span><span class="op">,</span></span>
-<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>  <span class="co">//height: 400,</span></span>
-<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> {</span>
-<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">"Age (months)"</span><span class="op">,</span></span>
-<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>    <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
-<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>    <span class="dt">inset</span><span class="op">:</span> <span class="dv">6</span></span>
-<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> {</span>
-<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">"Knower levels"</span></span>
-<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>    <span class="co">//label: null,</span></span>
-<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>    <span class="co">//tickFormat: null</span></span>
-<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fx</span><span class="op">:</span> {</span>
-<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="kw">null</span></span>
-<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fy</span><span class="op">:</span> {</span>
-<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="kw">null</span></span>
-<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a>  <span class="co">//color: {legend: true},</span></span>
-<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>  <span class="co">//facet: {data: klf, x: fx, y: fy, label: null},</span></span>
-<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">frame</span>()<span class="op">,</span></span>
-<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>    <span class="co">//Plot.dot(klf, Plot.dodgeY("middle", {</span></span>
-<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  x: "age_months",</span></span>
-<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  y: y,</span></span>
-<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  fy: "kl",</span></span>
-<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  fill: "kl" })</span></span>
-<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>    <span class="co">//),</span></span>
-<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">boxX</span>(klf<span class="op">,</span> {</span>
-<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a>      <span class="dt">x</span><span class="op">:</span> <span class="st">"age_months"</span><span class="op">,</span></span>
-<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y</span><span class="op">:</span> y<span class="op">,</span></span>
-<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a>      <span class="co">//fy: "kl",</span></span>
-<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fx</span><span class="op">:</span> fx<span class="op">,</span></span>
-<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fy</span><span class="op">:</span> fy<span class="op">,</span></span>
-<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fill</span><span class="op">:</span> <span class="st">"kl"</span> })</span>
-<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Filter by…</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="80" data-source-offset="-14"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 79;"><span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>viewof ages <span class="op">=</span> <span class="fu">interval</span>([d3<span class="op">.</span><span class="fu">min</span>(kl_data<span class="op">.</span><span class="at">age_months</span>)<span class="op">,</span> d3<span class="op">.</span><span class="fu">max</span>(kl_data<span class="op">.</span><span class="at">age_months</span>)]<span class="op">,</span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>                       {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Age (months)"</span>})</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="co">// language filter</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>lang_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">language</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>lang_defs <span class="op">=</span> [<span class="st">"English"</span>]</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>viewof langs <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(lang_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Languages"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> lang_defs})</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a><span class="co">// country filter</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>country_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">country</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>country_defs <span class="op">=</span> [<span class="st">"United States"</span><span class="op">,</span> <span class="st">"India"</span><span class="op">,</span> <span class="st">"Canada"</span>]</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>viewof countries <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(country_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Countries"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> country_defs})</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="co">// kl filter</span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>kl_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">kl</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>kl_defs <span class="op">=</span> kl_vals<span class="op">.</span><span class="fu">filter</span>(s <span class="kw">=&gt;</span> <span class="ss">/</span><span class="sc">^[123C]</span><span class="ss">/</span><span class="op">.</span><span class="fu">test</span>(s))</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>viewof kls <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(kl_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Knower levels"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> kl_defs})</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a><span class="co">// kl subset toggle</span></span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>viewof kl_sub <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">toggle</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"Group non-CP-knowers together"</span>})</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>kl_y <span class="op">=</span> kl_sub <span class="op">?</span> <span class="st">"kl_subset"</span> <span class="op">:</span> <span class="st">"kl"</span></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a><span class="co">// dataset filter</span></span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>dataset_vals <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(<span class="kw">new</span> <span class="bu">Set</span>(kl_data<span class="op">.</span><span class="at">dataset_id</span>))<span class="op">.</span><span class="fu">sort</span>()</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>dataset_defs <span class="op">=</span> dataset_vals</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>viewof datasets <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(dataset_vals<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Datasets"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> dataset_defs})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-3-1" data-nodetype="declaration">
@@ -428,7 +277,206 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-3-2" data-nodetype="expression">
+<div id="ojs-cell-3-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-10" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-11" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-12" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-13" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-14" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-15" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-fill panel-grid g-col-24 g-col-lg-17 pt-3 pt-lg-0">
+<div class="g-col-24">
+<div class="cell panel-fill">
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="113" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 112;"><span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>klf <span class="op">=</span> kl<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> langs<span class="op">.</span><span class="fu">includes</span>(d<span class="op">.</span><span class="at">language</span>))</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> countries<span class="op">.</span><span class="fu">includes</span>(d<span class="op">.</span><span class="at">country</span>))</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> kls<span class="op">.</span><span class="fu">includes</span>(d<span class="op">.</span><span class="at">kl</span>))</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">age_months</span> <span class="op">&gt;=</span> ages[<span class="dv">0</span>] <span class="op">&amp;&amp;</span> d<span class="op">.</span><span class="at">age_months</span> <span class="op">&lt;=</span> ages[<span class="dv">1</span>])</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Source Sans Pro"</span>}<span class="op">,</span></span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">100</span><span class="op">,</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">100</span><span class="op">,</span></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>  <span class="co">//width: 700,</span></span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> {</span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">"Age (months)"</span><span class="op">,</span></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>    <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>    <span class="dt">inset</span><span class="op">:</span> <span class="dv">6</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> {</span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">"Knower levels"</span></span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>    <span class="co">//label: null,</span></span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>    <span class="co">//tickFormat: null</span></span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fx</span><span class="op">:</span> {</span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fy</span><span class="op">:</span> {</span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>  <span class="co">//color: {legend: true},</span></span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>  <span class="co">//facet: {data: klf, x: fx, y: fy, label: null},</span></span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">frame</span>()<span class="op">,</span></span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>    <span class="co">//Plot.dot(klf, Plot.dodgeY("middle", {</span></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  x: "age_months",</span></span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  y: y,</span></span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  fy: "kl",</span></span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a>    <span class="co">//  fill: "kl" })</span></span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a>    <span class="co">//),</span></span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">boxX</span>(klf<span class="op">,</span> {</span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a>      <span class="dt">x</span><span class="op">:</span> <span class="st">"age_months"</span><span class="op">,</span></span>
+<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y</span><span class="op">:</span> kl_y<span class="op">,</span></span>
+<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a>      <span class="co">//fy: "kl",</span></span>
+<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fx</span><span class="op">:</span> fx<span class="op">,</span></span>
+<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fy</span><span class="op">:</span> fy<span class="op">,</span></span>
+<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fill</span><span class="op">:</span> kl_y })</span>
+<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="159" data-source-offset="-905"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 158;"><span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> d3<span class="op">.</span><span class="fu">rollup</span>(klf<span class="op">,</span> v <span class="kw">=&gt;</span> v<span class="op">.</span><span class="at">length</span><span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">dataset_id</span><span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">kl</span>)</span>
+<span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a>kl_counts <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(ds<span class="op">,</span> ([dataset_id<span class="op">,</span> kls]) <span class="kw">=&gt;</span> </span>
+<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a>  <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span>(kls<span class="op">,</span> ([kl<span class="op">,</span> count]) <span class="kw">=&gt;</span> ({ dataset_id<span class="op">,</span> kl<span class="op">,</span> <span class="dt">n</span><span class="op">:</span> count }))</span>
+<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a>)<span class="op">.</span><span class="fu">flat</span>()</span>
+<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Source Sans Pro"</span> }<span class="op">,</span></span>
+<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">180</span><span class="op">,</span></span>
+<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a>  <span class="dt">color</span><span class="op">:</span> { <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">axis</span><span class="op">:</span> <span class="st">"top"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Count"</span> }<span class="op">,</span></span>
+<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"Dataset"</span> }<span class="op">,</span></span>
+<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a>  <span class="co">//facet: {data: klf, x: fx, y: fy, label: null},</span></span>
+<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">barX</span>(klf<span class="op">,</span> Plot<span class="op">.</span><span class="fu">groupY</span>(</span>
+<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a>      { <span class="dt">x</span><span class="op">:</span> <span class="st">"count"</span> }<span class="op">,</span></span>
+<span id="cb5-174"><a href="#cb5-174" aria-hidden="true" tabindex="-1"></a>      { <span class="dt">fill</span><span class="op">:</span> kl_y<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"dataset_id"</span><span class="op">,</span> <span class="dt">sort</span><span class="op">:</span> { <span class="dt">y</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">reverse</span><span class="op">:</span> <span class="kw">true</span> } }</span>
+<span id="cb5-175"><a href="#cb5-175" aria-hidden="true" tabindex="-1"></a>    ))<span class="op">,</span></span>
+<span id="cb5-176"><a href="#cb5-176" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">textX</span>(klf<span class="op">,</span> Plot<span class="op">.</span><span class="fu">stackX</span>(Plot<span class="op">.</span><span class="fu">groupY</span>(</span>
+<span id="cb5-177"><a href="#cb5-177" aria-hidden="true" tabindex="-1"></a>      { <span class="dt">x</span><span class="op">:</span> <span class="st">"count"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> <span class="st">"count"</span> }<span class="op">,</span></span>
+<span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>      { <span class="dt">y</span><span class="op">:</span> <span class="st">"dataset_id"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> kl_y<span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"white"</span> }</span>
+<span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a>    )))<span class="op">,</span></span>
+<span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-5" data-nodetype="expression">
 
 </div>
 </div>
@@ -442,7 +490,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </main> <!-- /main -->
 <script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"Plot = import(\"https://esm.sh/@observablehq/plot\")\nimport {interval} from '@mootari/range-slider'\n\nkl = transpose(kl_data)\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"\n// facets\nviewof fs = Inputs.checkbox([\"language\", \"country\", \"method\"],\n                            {value: [\"language\"], label: \"Facet by...\"})\nfx = fs.includes(\"method\") ? \"method\" : null // fx = \"method\" or null\nfy = fs.filter(x => x !== \"method\").join(\"_\") // fy = \"language\", \"country\", \"language_country\", null\n\n// age filter\nviewof ages = interval([d3.min(kl_data.age_months), d3.max(kl_data.age_months)],\n                       {step: 1, label: \"Age (months)\"})\n\n// language filter\nlang_vals = Array.from(new Set(kl_data.language)).sort()\nlang_defs = [\"English\"]\nviewof langs = Inputs.select(lang_vals, {label: \"Languages\", multiple: true, value: lang_defs})\n\n// country filter\ncountry_vals = Array.from(new Set(kl_data.country)).sort()\ncountry_defs = [\"United States\", \"India\", \"Canada\"]\nviewof countries = Inputs.select(country_vals, {label: \"Countries\", multiple: true, value: country_defs})\n\n// kl filter\nkl_vals = Array.from(new Set(kl_data.kl)).sort()\nkl_defs = kl_vals.filter(s => /^[123C]/.test(s))\nviewof kls = Inputs.select(kl_vals, {label: \"Knower levels\", multiple: true, value: kl_defs})\n\n// kl subset toggle\nviewof kl_sub = Inputs.toggle({label: \"Group non-CP-knowers together\"})\ny = kl_sub ? \"kl_subset\" : \"kl\"\n\n// dataset filter\ndataset_vals = Array.from(new Set(kl_data.dataset_id)).sort()\ndataset_defs = dataset_vals\nviewof datasets = Inputs.select(dataset_vals, {label: \"Datasets\", multiple: true, value: dataset_defs})\n"},{"methodName":"interpret","cellName":"ojs-cell-3","inline":false,"source":"\nklf = kl.filter(d => langs.includes(d.language))\n        .filter(d => countries.includes(d.country))\n        .filter(d => kls.includes(d.kl))\n        .filter(d => d.age_months >= ages[0] && d.age_months <= ages[1])\n\nPlot.plot({\n  style: {fontFamily: \"Source Sans Pro\"},\n  marginLeft: 80,\n  marginRight: 80,\n  //height: 400,\n  x: {\n    label: \"Age (months)\",\n    grid: true,\n    inset: 6\n  },\n  y: {\n    label: \"Knower levels\"\n    //label: null,\n    //tickFormat: null\n  },\n  fx: {\n    label: null\n  },\n  fy: {\n    label: null\n  },\n  //color: {legend: true},\n  //facet: {data: klf, x: fx, y: fy, label: null},\n  marks: [\n    Plot.frame(),\n    //Plot.dot(klf, Plot.dodgeY(\"middle\", {\n    //  x: \"age_months\",\n    //  y: y,\n    //  fy: \"kl\",\n    //  fill: \"kl\" })\n    //),\n    Plot.boxX(klf, {\n      x: \"age_months\",\n      y: y,\n      //fy: \"kl\",\n      fx: fx,\n      fy: fy,\n      fill: \"kl\" })\n  ]\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('fs')"},{"methodName":"interpretQuiet","source":"shinyInput('ages')"},{"methodName":"interpretQuiet","source":"shinyInput('langs')"},{"methodName":"interpretQuiet","source":"shinyInput('countries')"},{"methodName":"interpretQuiet","source":"shinyInput('kls')"},{"methodName":"interpretQuiet","source":"shinyInput('kl_sub')"},{"methodName":"interpretQuiet","source":"shinyInput('datasets')"}]}
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"Plot = import(\"https://esm.sh/@observablehq/plot\")\nimport {interval} from '@mootari/range-slider'\n\nkl = transpose(kl_data)\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"// facets\nviewof fs = Inputs.checkbox([\"language\", \"country\", \"method\"],\n                            {value: [\"language\"]})\nfx = fs.includes(\"method\") ? \"method\" : null // fx = \"method\" or null\nfy = fs.filter(x => x !== \"method\").join(\"_\") // fy = \"language\", \"country\", \"language_country\", null\n"},{"methodName":"interpret","cellName":"ojs-cell-3","inline":false,"source":"// age filter\nviewof ages = interval([d3.min(kl_data.age_months), d3.max(kl_data.age_months)],\n                       {step: 1, label: \"Age (months)\"})\n\n// language filter\nlang_vals = Array.from(new Set(kl_data.language)).sort()\nlang_defs = [\"English\"]\nviewof langs = Inputs.select(lang_vals, {label: \"Languages\", multiple: true, value: lang_defs})\n\n// country filter\ncountry_vals = Array.from(new Set(kl_data.country)).sort()\ncountry_defs = [\"United States\", \"India\", \"Canada\"]\nviewof countries = Inputs.select(country_vals, {label: \"Countries\", multiple: true, value: country_defs})\n\n// kl filter\nkl_vals = Array.from(new Set(kl_data.kl)).sort()\nkl_defs = kl_vals.filter(s => /^[123C]/.test(s))\nviewof kls = Inputs.select(kl_vals, {label: \"Knower levels\", multiple: true, value: kl_defs})\n\n// kl subset toggle\nviewof kl_sub = Inputs.toggle({label: \"Group non-CP-knowers together\"})\nkl_y = kl_sub ? \"kl_subset\" : \"kl\"\n\n// dataset filter\ndataset_vals = Array.from(new Set(kl_data.dataset_id)).sort()\ndataset_defs = dataset_vals\nviewof datasets = Inputs.select(dataset_vals, {label: \"Datasets\", multiple: true, value: dataset_defs})\n"},{"methodName":"interpret","cellName":"ojs-cell-4","inline":false,"source":"\nklf = kl.filter(d => langs.includes(d.language))\n        .filter(d => countries.includes(d.country))\n        .filter(d => kls.includes(d.kl))\n        .filter(d => d.age_months >= ages[0] && d.age_months <= ages[1])\n\nPlot.plot({\n  style: {fontFamily: \"Source Sans Pro\"},\n  marginLeft: 100,\n  marginRight: 100,\n  //width: 700,\n  x: {\n    label: \"Age (months)\",\n    grid: true,\n    inset: 6\n  },\n  y: {\n    label: \"Knower levels\"\n    //label: null,\n    //tickFormat: null\n  },\n  fx: {\n    label: null\n  },\n  fy: {\n    label: null\n  },\n  //color: {legend: true},\n  //facet: {data: klf, x: fx, y: fy, label: null},\n  marks: [\n    Plot.frame(),\n    //Plot.dot(klf, Plot.dodgeY(\"middle\", {\n    //  x: \"age_months\",\n    //  y: y,\n    //  fy: \"kl\",\n    //  fill: \"kl\" })\n    //),\n    Plot.boxX(klf, {\n      x: \"age_months\",\n      y: kl_y,\n      //fy: \"kl\",\n      fx: fx,\n      fy: fy,\n      fill: kl_y })\n  ]\n})\n\nds = d3.rollup(klf, v => v.length, d => d.dataset_id, d => d.kl)\nkl_counts = Array.from(ds, ([dataset_id, kls]) => \n  Array.from(kls, ([kl, count]) => ({ dataset_id, kl, n: count }))\n).flat()\n\nPlot.plot({\n  style: { fontFamily: \"Source Sans Pro\" },\n  marginLeft: 180,\n  color: { legend: true },\n  x: { axis: \"top\", label: \"Count\" },\n  y: { label: \"Dataset\" },\n  //facet: {data: klf, x: fx, y: fy, label: null},\n  marks: [\n    Plot.barX(klf, Plot.groupY(\n      { x: \"count\" },\n      { fill: kl_y, y: \"dataset_id\", sort: { y: \"x\", reverse: true } }\n    )),\n    Plot.textX(klf, Plot.stackX(Plot.groupY(\n      { x: \"count\", text: \"count\" },\n      { y: \"dataset_id\", z: kl_y, fill: \"white\" }\n    ))),\n  ]\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('fs')"},{"methodName":"interpretQuiet","source":"shinyInput('ages')"},{"methodName":"interpretQuiet","source":"shinyInput('langs')"},{"methodName":"interpretQuiet","source":"shinyInput('countries')"},{"methodName":"interpretQuiet","source":"shinyInput('kls')"},{"methodName":"interpretQuiet","source":"shinyInput('kl_sub')"},{"methodName":"interpretQuiet","source":"shinyInput('datasets')"}]}
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }

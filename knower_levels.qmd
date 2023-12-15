@@ -24,7 +24,8 @@ trials <- dataset$table("trials")$to_tibble()
 ```{r}
 #| cache: true
 
-# TODO: fix upstream?
+# TODO: fix upstream -- method dupes in dataset, language dupes in subjects/trials
+
 dataset_methods <- datasets |>
   distinct(dataset_id, method) |>
   group_by(dataset_id) |>
@@ -62,15 +63,19 @@ import {interval} from '@mootari/range-slider'
 kl = transpose(kl_data)
 ```
 
-```{ojs}
-//| panel: sidebar
+:::{.panel-sidebar}
 
+__Facet by...__
+```{ojs}
 // facets
 viewof fs = Inputs.checkbox(["language", "country", "method"],
-                            {value: ["language"], label: "Facet by..."})
+                            {value: ["language"]})
 fx = fs.includes("method") ? "method" : null // fx = "method" or null
 fy = fs.filter(x => x !== "method").join("_") // fy = "language", "country", "language_country", null
+```
 
+__Filter by...__
+```{ojs}
 // age filter
 viewof ages = interval([d3.min(kl_data.age_months), d3.max(kl_data.age_months)],
                        {step: 1, label: "Age (months)"})
@@ -92,13 +97,15 @@ viewof kls = Inputs.select(kl_vals, {label: "Knower levels", multiple: true, val
 
 // kl subset toggle
 viewof kl_sub = Inputs.toggle({label: "Group non-CP-knowers together"})
-y = kl_sub ? "kl_subset" : "kl"
+kl_y = kl_sub ? "kl_subset" : "kl"
 
 // dataset filter
 dataset_vals = Array.from(new Set(kl_data.dataset_id)).sort()
 dataset_defs = dataset_vals
 viewof datasets = Inputs.select(dataset_vals, {label: "Datasets", multiple: true, value: dataset_defs})
 ```
+
+:::
 
 ```{ojs}
 //| panel: fill
@@ -110,9 +117,9 @@ klf = kl.filter(d => langs.includes(d.language))
 
 Plot.plot({
   style: {fontFamily: "Source Sans Pro"},
-  marginLeft: 80,
-  marginRight: 80,
-  //height: 400,
+  marginLeft: 100,
+  marginRight: 100,
+  //width: 700,
   x: {
     label: "Age (months)",
     grid: true,
@@ -141,11 +148,35 @@ Plot.plot({
     //),
     Plot.boxX(klf, {
       x: "age_months",
-      y: y,
+      y: kl_y,
       //fy: "kl",
       fx: fx,
       fy: fy,
-      fill: "kl" })
+      fill: kl_y })
+  ]
+})
+
+ds = d3.rollup(klf, v => v.length, d => d.dataset_id, d => d.kl)
+kl_counts = Array.from(ds, ([dataset_id, kls]) => 
+  Array.from(kls, ([kl, count]) => ({ dataset_id, kl, n: count }))
+).flat()
+
+Plot.plot({
+  style: { fontFamily: "Source Sans Pro" },
+  marginLeft: 180,
+  color: { legend: true },
+  x: { axis: "top", label: "Count" },
+  y: { label: "Dataset" },
+  //facet: {data: klf, x: fx, y: fy, label: null},
+  marks: [
+    Plot.barX(klf, Plot.groupY(
+      { x: "count" },
+      { fill: kl_y, y: "dataset_id", sort: { y: "x", reverse: true } }
+    )),
+    Plot.textX(klf, Plot.stackX(Plot.groupY(
+      { x: "count", text: "count" },
+      { y: "dataset_id", z: kl_y, fill: "white" }
+    ))),
   ]
 })
 ```

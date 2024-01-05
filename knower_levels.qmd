@@ -2,12 +2,13 @@
 title: Knower Levels
 grid:
   sidebar-width: 0px
-  body-width: 1400px
+  body-width: 1600px
   margin-width: 0px
 ---
 
 ```{r}
 library(dplyr)
+library(stringr)
 library(forcats)
 ```
 
@@ -51,7 +52,8 @@ kl_data <- subjects |>
          age_months = as.numeric(age_months)) |> # convert to numeric
   filter(!is.na(kl) | !is.na(highest_count)) |> # remove rows with both kl and highest NA
   mutate(language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort), # recode + sort languages
-         language_country = paste(language, country, sep = "\n")) # combination of language and country
+         language_country = paste(language, country, sep = "\n")) |> # combination of language and country
+  arrange(language, kl, age_months)
 ```
 
 ```{r}
@@ -61,6 +63,8 @@ ojs_define(kl_data = kl_data)
 ```{ojs}
 Plot = import("https://esm.sh/@observablehq/plot")
 import {interval} from '@mootari/range-slider' // two ended slider
+
+font = "Source Sans Pro"
 
 kl = transpose(kl_data)
 ```
@@ -83,18 +87,19 @@ viewof ages = interval([d3.min(kl_data.age_months), d3.max(kl_data.age_months)],
                        {step: 1, label: "Age (months)"})
 
 // language filter
-lang_vals = Array.from(new Set(kl_data.language)).sort()
-lang_defs = ["English"]
+lang_vals = Array.from(new Set(kl_data.language)).sort() // options
+lang_defs = ["English"] // default
 viewof langs = Inputs.select(lang_vals, {label: "Languages", multiple: true, value: lang_defs})
 
 // country filter
-country_vals = Array.from(new Set(kl_data.country)).sort()
-country_defs = ["United States", "India", "Canada"]
+country_vals = Array.from(new Set(kl_data.country)).sort() // options
+country_defs = ["United States", "India", "Canada"] // default
 viewof countries = Inputs.select(country_vals, {label: "Countries", multiple: true, value: country_defs})
 
 // kl filter
-kl_vals = Array.from(new Set(kl_data.kl)).sort()
-kl_defs = kl_vals.filter(s => /^[123C]/.test(s))
+cp_sort = (a, b) => a === "CP-knower" ? 1 : b === "CP-knower" ? -1 : a.localeCompare(b);
+kl_vals = Array.from(new Set(kl_data.kl)).sort(cp_sort) // options
+kl_defs = kl_vals.filter(s => /^[123C]/.test(s)) // default
 viewof kls = Inputs.select(kl_vals, {label: "Knower levels", multiple: true, value: kl_defs})
 
 // kl subset toggle
@@ -102,8 +107,8 @@ viewof kl_sub = Inputs.toggle({label: "Group non-CP-knowers together"})
 kl_y = kl_sub ? "kl_subset" : "kl"
 
 // dataset filter
-dataset_vals = Array.from(new Set(kl_data.dataset_id)).sort()
-dataset_defs = dataset_vals
+dataset_vals = Array.from(new Set(kl_data.dataset_id)).sort() // options
+dataset_defs = dataset_vals // default
 viewof datasets = Inputs.select(dataset_vals, {label: "Datasets", multiple: true, value: dataset_defs})
 ```
 
@@ -111,26 +116,27 @@ viewof datasets = Inputs.select(dataset_vals, {label: "Datasets", multiple: true
 
 :::{.panel-fill}
 
-### Distributions of knower levels over age
+### Distribution of knower level over age
 
 ```{ojs}
 // filter data using inputs
 klf = kl.filter(d => langs.includes(d.language))
         .filter(d => countries.includes(d.country))
+        .filter(d => datasets.includes(d.dataset_id))
         .filter(d => kls.includes(d.kl))
         .filter(d => d.age_months >= ages[0] && d.age_months <= ages[1])
 
+// possible kl values in filtered data
+klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
+
 // boxplot
 Plot.plot({
-  style: {fontFamily: "Source Sans Pro"},
+  style: { fontFamily: font },
   marginLeft: 100,
   marginRight: 100,
-  x: {
-    label: "Age (months)",
-    grid: true,
-    inset: 10
-  },
-  y: { label: "Knower levels" },
+  x: { label: "Age (months)", grid: true, inset: 10 },
+  y: { label: "Knower level", domain: klfv },
+  color: { domain: klfv },
   facet: { label: null },
   marks: [
     Plot.frame(),
@@ -139,39 +145,56 @@ Plot.plot({
       y: kl_y,
       fx: fx,
       fy: fy,
-      fill: kl_y })
+      fill: kl_y
+    })
   ]
 })
 ```
 
-### Sample sizes in each dataset
+### Counts of knower level in each dataset
 
 ```{ojs}
-// get sample size of each kl in each dataset
-ns = d3.rollup(klf, v => v.length, d => d.dataset_id, d => d.kl)
-
-// turn nested map from rollup into flat array
-kl_counts = Array.from(ns, ([dataset_id, kls]) => 
-  Array.from(kls, ([kl, count]) => ({ dataset_id, kl, n: count }))
-).flat()
-
 // sample size plot
 Plot.plot({
-  style: { fontFamily: "Source Sans Pro" },
+  style: { fontFamily: font },
   marginLeft: 180,
-  color: { legend: true },
+  color: { legend: true, marginLeft: 180, domain: klfv },
   x: { axis: "top", label: "Count" },
   y: { label: "Dataset" },
-  //facet: {data: klf, x: fx, y: fy, label: null},
   marks: [
     Plot.barX(klf, Plot.groupY(
       { x: "count" },
-      { fill: kl_y, y: "dataset_id", inset: 1, sort: { y: "x", reverse: true } }
+      { fill: kl_y, y: "dataset_id", inset: 1, sort: { y: "x", reverse: true }, order: "sum" }
     )),
     Plot.textX(klf, Plot.stackX(Plot.groupY(
       { x: "count", text: "count" },
-      { y: "dataset_id", z: kl_y, fill: "white" }
+      { y: "dataset_id", z: kl_y, fill: "white", order: "sum" }
     ))),
+  ]
+})
+```
+
+### Cumulative probability of knower level over age
+
+```{ojs}
+// cumulative probability plot
+Plot.plot({
+  style: { fontFamily: font },
+  marginRight: 100,
+  color: { legend: true, domain: klfv },
+  x: { label: "Age (months)", grid: true, inset: 10 },
+  y: { label: "Cumulative probability of knower level", inset: 10 },
+  facet: { label: null },
+  marks: [
+    Plot.frame(),
+    Plot.lineY(klf, Plot.normalizeY("extent", // scale to 0-1
+                    Plot.mapY("cumsum", // cumulative sum
+                    Plot.binY({ y: "count" }, { // count in each age bin
+      x: "age_months",
+      stroke: kl_y,
+      fx: fx,
+      fy: fy
+    }))))
   ]
 })
 ```

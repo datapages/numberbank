@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://langcog.github.io/numberbank/submit.html</loc>
-    <lastmod>2024-01-10T22:24:20.452Z</lastmod>
-  </url>
-  <url>
-    <loc>https://langcog.github.io/numberbank/methods.html</loc>
-    <lastmod>2024-01-10T22:24:19.988Z</lastmod>
-  </url>
-  <url>
-    <loc>https://langcog.github.io/numberbank/item_viz.html</loc>
-    <lastmod>2024-01-10T22:24:19.395Z</lastmod>
-  </url>
-  <url>
-    <loc>https://langcog.github.io/numberbank/knower_levels.html</loc>
-    <lastmod>2024-01-10T22:24:18.574Z</lastmod>
-  </url>
-  <url>
-    <loc>https://langcog.github.io/numberbank/highest_count.html</loc>
-    <lastmod>2024-01-10T22:24:19.169Z</lastmod>
-  </url>
-  <url>
-    <loc>https://langcog.github.io/numberbank/index.html</loc>
-    <lastmod>2024-01-10T22:24:19.646Z</lastmod>
+    <loc>https://langcog.github.io/numberbank/data.html</loc>
+    <lastmod>2024-01-10T22:28:39.157Z</lastmod>
   </url>
   <url>
     <loc>https://langcog.github.io/numberbank/contributors.html</loc>
-    <lastmod>2024-01-10T22:24:20.221Z</lastmod>
+    <lastmod>2024-01-10T22:28:26.194Z</lastmod>
+  </url>
+  <url>
+    <loc>https://langcog.github.io/numberbank/index.html</loc>
+    <lastmod>2024-01-10T22:28:25.623Z</lastmod>
+  </url>
+  <url>
+    <loc>https://langcog.github.io/numberbank/highest_count.html</loc>
+    <lastmod>2024-01-10T22:28:25.153Z</lastmod>
+  </url>
+  <url>
+    <loc>https://langcog.github.io/numberbank/item_viz.html</loc>
+    <lastmod>2024-01-10T22:28:25.368Z</lastmod>
+  </url>
+  <url>
+    <loc>https://langcog.github.io/numberbank/methods.html</loc>
+    <lastmod>2024-01-10T22:28:25.973Z</lastmod>
+  </url>
+  <url>
+    <loc>https://langcog.github.io/numberbank/submit.html</loc>
+    <lastmod>2024-01-10T22:28:26.415Z</lastmod>
   </url>
 </urlset>

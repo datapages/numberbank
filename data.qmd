@@ -1,0 +1,347 @@
+---
+grid:
+  sidebar-width: 0px
+  body-width: 1600px
+  margin-width: 0px
+---
+
+```{r}
+library(dplyr)
+library(stringr)
+library(forcats)
+```
+
+```{r}
+source("load_data.R")
+
+# replacement language values
+language_recode <- list(
+  "Arabic" = "Saudi",
+  "French" = "Français",
+  "English" = c("Anglais", "English (India)", "English (US)", "English/Portugese", "English/Spanish"),
+  "Slovenian (dual)" = "Slovenian_dual",
+  "Slovenian (non-dual)" = c("Slovenian", "Slovenian_nonDual", "Serbian/Slovenian")
+)
+
+kl_data <- kld |>
+  # mutate(kl = kl |> factor() |> fct_relabel(\(l) paste0(l, "-knower")), # add "-knower" to kl
+  #        kl_subset = if_else(kl == "CP-knower", kl, "Subset-knower")) |> # code subset-knowers
+  filter(!is.na(kl) | !is.na(hc)) |> # remove rows with both kl and highest NA
+  mutate(# recode + sort languages
+         language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
+         # combination of language and country
+         language_country = paste(language, country, sep = "\n")) |>
+  arrange(language, kl, age)
+
+trial_data <- td |>
+  mutate(response = if_else(response > 10, 10, response)) |> # cap responses at 10
+  mutate(# recode + sort languages
+         language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
+         # combination of language and country
+         language_country = paste(language, country, sep = "\n"))
+```
+
+```{r}
+ojs_define(kl_data = kl_data)
+ojs_define(trial_data = trial_data)
+```
+
+```{ojs}
+Plot = import("https://esm.sh/@observablehq/plot")
+import {interval} from '@mootari/range-slider' // two ended slider
+
+fontFamily = "Source Sans Pro"
+fontSize = ".75rem"
+age_label = "Age (months)"
+kl = transpose(kl_data)
+tr = transpose(trial_data)
+```
+
+::: {.panel-sidebar}
+
+__Facet by...__
+```{ojs}
+// facets
+viewof fs = Inputs.checkbox(["language", "country", "method"],
+                            {value: ["language"]})
+```
+
+```{ojs}
+fx = fs.includes("method") ? "method" : null // fx = "method" or null
+fy = fs.filter(x => x !== "method").join("_") // fy = "language", "country", "language_country", null
+```
+
+__Filter by...__
+```{ojs}
+// age filter
+viewof ages = interval([d3.min(kl_data.age), d3.max(kl_data.age)],
+                       {step: 1, label: "Age (months)"})
+
+// kl filter
+cp_sort = (a, b) => a === "CP-knower" ? 1 : b === "CP-knower" ? -1 : a.localeCompare(b);
+kl_vals = Array.from(new Set(kl_data.kl)).sort(cp_sort) // options
+kl_defs = kl_vals.filter(s => /^[123C]/.test(s)) // default
+viewof kls = Inputs.select(kl_vals, {label: "Knower levels", multiple: true, value: kl_defs})
+
+// kl subset toggle
+viewof kl_sub = Inputs.checkbox(["Group non-CP-knowers together"])
+kl_y = kl_sub.length ? "kl_subset" : "kl"
+
+// language filter
+lang_vals = Array.from(new Set(kl_data.language)).sort() // options
+lang_defs = ["English"] // default
+viewof langs = Inputs.select(lang_vals, {label: "Languages", multiple: true, value: lang_defs})
+
+// country filter
+country_vals = Array.from(new Set(kl_data.country)).sort() // options
+country_defs = ["United States", "India", "Canada"] // default
+viewof countries = Inputs.select(country_vals, {label: "Countries", multiple: true, value: country_defs})
+
+// dataset filter
+dataset_vals = Array.from(new Set(kl_data.dataset_id)).sort() // options
+dataset_defs = dataset_vals // default
+viewof datasets = Inputs.select(dataset_vals, {label: "Datasets", multiple: true, value: dataset_defs})
+```
+
+```{ojs}
+// filter data using inputs (except age)
+klf = kl.filter(d => langs.includes(d.language))
+        .filter(d => countries.includes(d.country))
+        .filter(d => datasets.includes(d.dataset_id))
+        .filter(d => kls.includes(d.kl))
+        .filter(d => d.age >= ages[0] && d.age <= ages[1])
+
+// possible kl values in filtered data
+klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
+```
+
+:::
+
+::: {.panel-fill}
+
+::: {.panel-tabset}
+
+## Knower levels
+
+__Counts of knower level in each dataset__
+
+```{ojs}
+// sample size plot
+ss_margin = 180
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  marginLeft: ss_margin,
+  color: { legend: true, domain: klfv, marginLeft: ss_margin},
+  x: { label: "", labelAnchor: "center", labelArrow: "none", axis: "top" },
+  y: { label: "Dataset", labelAnchor: "top", tickSize: 0, tickPadding: 2 },
+  marks: [
+    Plot.barX(klf, Plot.groupY(
+      { x: "count" },
+      { fill: kl_y, y: "dataset_id", inset: 1, sort: { y: "x", reverse: true, } }
+    )),
+    Plot.textX(klf, Plot.stackX(Plot.groupY(
+      { x: "count", text: "count" },
+      { y: "dataset_id", z: kl_y, fill: "white", }
+    ))),
+  ]
+})
+```
+
+__Distribution of knower level over age__
+
+```{ojs}
+// boxplot
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  marginLeft: 60,
+  marginRight: 100,
+  x: { label: age_label, grid: true, inset: 10, line: true, labelAnchor: "center", labelArrow: "none" },
+  y: { label: "Knower level", labelAnchor: "top", tickSize: 0, tickPadding: 2, domain: klfv },
+  color: { domain: klfv },
+  facet: { label: null },
+  marks: [
+    Plot.boxX(klf, {
+      x: "age",
+      y: kl_y,
+      fx: fx,
+      fy: fy,
+      fill: kl_y
+    })
+  ]
+})
+```
+
+__Cumulative probability of knower level over age__
+
+```{ojs}
+// cumulative probability plot
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  marginRight: 100,
+  color: { legend: true, domain: klfv },
+  x: { label: age_label, grid: true, inset: 10, line: true, labelAnchor: "center", labelArrow: "none" },
+  y: { label: "Cumulative probability of knower level", inset: 5, line: true, labelAnchor: "center", labelArrow: "none" },
+  facet: { label: null },
+  marks: [
+    Plot.lineY(klf, Plot.normalizeY("extent", // scale to 0-1
+                    Plot.mapY("cumsum", // cumulative sum
+                    Plot.binY({ y: "count" }, { // count in each age bin
+      x: "age",
+      stroke: kl_y,
+      fx: fx,
+      fy: fy
+    }))))
+  ]
+})
+```
+
+## Give-N
+
+```{ojs}
+trf = tr.filter(d => langs.includes(d.language))
+        .filter(d => countries.includes(d.country))
+        .filter(d => datasets.includes(d.dataset_id))
+        .filter(d => kls.includes(d.kl))
+        .filter(d => d.age >= ages[0] && d.age <= ages[1])
+```
+
+```{ojs}
+rc_map = d3.rollup(trf, v => v.length, d => d.query, d => d.response)
+rc = Array.from(rc_map, ([query, responses]) => 
+  Array.from(responses, ([response, count]) =>
+    ({ query, response, count, total: d3.sum(responses.values())})))
+ .flat()
+ .map(d => ({ ...d, proportion: d.count / d.total }))
+
+//queries = Array.from(new Set(trf.map(d => d.query))).sort().map(d => ({ query: d }))
+
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  width: 950,
+  height: 125,
+  x: { label: "Response" },
+  y: {
+    label: "Proportion responses", labelAnchor: "center", labelArrow: "none",
+    grid: true, domain: [0, 1]
+  },
+  fx: { label: null, axis: null },
+  marks: [
+    //Plot.frame(),
+    Plot.rectY(rc, {
+      x: "response",
+      y: "proportion",
+      fx: "query",
+      padding: 0.03,
+      //fy: fy
+    }),
+    //Plot.text(queries, { fx: "query", text: (d) => ("Query: " + d.query), frameAnchor: "top", dy: -1 }),
+    Plot.text(rc, Plot.selectFirst({ fx: "query", text: (d) => ("Query: " + d.query), frameAnchor: "top", dy: -16 })),
+    Plot.ruleY([0])
+  ]
+})
+```
+
+## Highest count
+
+__Counts in each dataset__
+
+```{ojs}
+hcf = klf.filter(s => s.hc)
+
+// sample size plot
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  marginLeft: ss_margin,
+  x: { label: "", labelAnchor: "center", labelArrow: "none", axis: "top" },
+  y: { label: "Dataset", labelAnchor: "top", tickSize: 0, tickPadding: 2 },
+  //x: { axis: "top", label: "Count" },
+  //y: { label: "Dataset" },
+  marks: [
+    Plot.barX(hcf, Plot.groupY(
+      { x: "count" },
+      { y: "dataset_id", inset: 1, sort: { y: "x", reverse: true, } } //order: "sum"
+    )),
+    Plot.textX(hcf, Plot.stackX(Plot.groupY(
+      { x: "count", text: "count" },
+      { y: "dataset_id", fill: "white", } //order: "sum" }
+    ))),
+  ]
+})
+```
+
+__Highest count over age__
+
+```{ojs}
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  marginRight: 100,
+  //color: { legend: true, domain: klfv },
+  x: { label: age_label, grid: true, inset: 10, line: true, labelAnchor: "center", labelArrow: "none" },
+  y: { label: "Highest count", inset: 5, line: true, labelAnchor: "center", labelArrow: "none" },
+  //x: { label: age_label, grid: true, inset: 10 },
+  //y: { label: "Highest count", inset: 10 },
+  facet: { label: null },
+  marks: [
+    //Plot.frame(),
+    Plot.dot(hcf, {
+      x: "age",
+      y: "hc",
+      fill: "black",
+      fx: fx,
+      fy: fy
+    })
+  ]
+})
+```
+
+__Distribution of highest count__
+
+```{ojs}
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  marginRight: 100,
+  //color: { legend: true, domain: klfv },
+  x: { label: "Highest count", grid: true, inset: 10, line: true, labelAnchor: "center", labelArrow: "none" },
+  y: { line: true, labelAnchor: "center", labelArrow: "none" },
+  //x: { label: "Highest count", grid: true, inset: 10 },
+  //y: { inset: 10 },
+  facet: { label: null },
+  marks: [
+    //Plot.frame(),
+    Plot.rectY(hcf, Plot.binX({y: "count"}, {
+      x: "hc",
+      fx: fx,
+      fy: fy
+    }))
+  ]
+})
+```
+
+__Distribution of highest count by knower level__
+
+```{ojs}
+// boxplot
+Plot.plot({
+  style: { fontFamily: fontFamily, fontSize: fontSize },
+  marginLeft: 60,
+  marginRight: 100,
+  x: { label: "Highest count", grid: true, inset: 10, line: true, labelAnchor: "center", labelArrow: "none" },
+  y: { label: "Knower level", labelAnchor: "top", tickSize: 0, tickPadding: 2, domain: klfv },
+  //x: { label: "Highest count", grid: true, inset: 10 },
+  //y: { label: "Knower level", domain: klfv },
+  color: { domain: klfv },
+  facet: { label: null },
+  marks: [
+    Plot.boxX(hcf, {
+      x: "hc",
+      y: kl_y,
+      fx: fx,
+      fy: fy,
+      fill: kl_y
+    })
+  ]
+})
+```
+
+:::
+:::

@@ -5,11 +5,8 @@ website:
   title: "Numberbank"
   navbar:
     left:
-      - text: Give-N
-        menu: 
-          - knower_levels.qmd
-          - item_viz.qmd
-      - highest_count.qmd
+      - text: Data
+        href: data.qmd
       - methods.qmd
       - contributors.qmd
       - submit.qmd

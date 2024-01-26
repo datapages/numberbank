@@ -15,5 +15,3 @@ title: Contributors
 ![[Mike Frank](https://web.stanford.edu/~mcfrank)](img/mike.jpg)
 
 :::
-
-## Current Datasets

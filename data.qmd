@@ -121,7 +121,11 @@ klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
 
 ::: {.panel-tabset}
 
-## Knower levels
+## Give-N
+
+::: {.panel-tabset .nav-pills}
+
+### Knower levels
 
 __Counts of knower level in each dataset__
 
@@ -195,7 +199,7 @@ Plot.plot({
 })
 ```
 
-## Give-N
+### Items
 
 ```{ojs}
 trf = tr.filter(d => langs.includes(d.language))
@@ -240,6 +244,8 @@ Plot.plot({
   ]
 })
 ```
+
+:::
 
 ## Highest count
 

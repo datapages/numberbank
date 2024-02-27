@@ -1,1 +1,1 @@
-Sitemap: https://langcog.github.io/numberbank/sitemap.xml
+Sitemap: https://datapages.github.io/numberbank/sitemap.xml

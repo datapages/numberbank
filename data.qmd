@@ -51,7 +51,7 @@ Plot = import("https://esm.sh/@observablehq/plot")
 import {interval} from '@mootari/range-slider' // two ended slider
 
 fontFamily = "Source Sans Pro"
-fontSize = ".75rem"
+fontSize = ".7rem"
 age_label = "Age (months)"
 kl = transpose(kl_data)
 tr = transpose(trial_data)
@@ -210,36 +210,37 @@ trf = tr.filter(d => langs.includes(d.language))
 ```
 
 ```{ojs}
-rc_map = d3.rollup(trf, v => v.length, d => d.query, d => d.response)
-rc = Array.from(rc_map, ([query, responses]) => 
-  Array.from(responses, ([response, count]) =>
-    ({ query, response, count, total: d3.sum(responses.values())})))
- .flat()
- .map(d => ({ ...d, proportion: d.count / d.total }))
+rc_map = d3.rollup(trf, v => v.length, d => d[kl_y], d => d.query, d => d.response)
 
-//queries = Array.from(new Set(trf.map(d => d.query))).sort().map(d => ({ query: d }))
+rc = Array.from(rc_map, ([kl, kl_responses]) =>
+  Array.from(kl_responses, ([query, query_responses]) => 
+    Array.from(query_responses, ([response, count]) =>
+      ({ kl, query, response, count, total: d3.sum(query_responses.values())})
+    ).map(d => ({ ...d, proportion: d.count / d.total }))
+  ).flat()
+).flat()
 
 Plot.plot({
   style: { fontFamily: fontFamily, fontSize: fontSize },
   width: 950,
-  height: 125,
+  height: 120 * rc_map.size,
+  marginRight: 100,
   x: { label: "Response" },
-  y: {
-    label: "Proportion responses", labelAnchor: "center", labelArrow: "none",
-    grid: true, domain: [0, 1]
-  },
-  fx: { label: null, axis: null },
+  y: { label: "Proportion responses", grid: true, domain: [0, 1] },
+  fx: { label: "Query" },
+  fy: { label: null, padding: 0.2, domain: klfv },
+  color: { domain: klfv },
   marks: [
-    //Plot.frame(),
     Plot.rectY(rc, {
       x: "response",
       y: "proportion",
       fx: "query",
-      padding: 0.03,
-      //fy: fy
+      fy: "kl",
+      fill: "kl",
+      padding: 0.03
     }),
-    //Plot.text(queries, { fx: "query", text: (d) => ("Query: " + d.query), frameAnchor: "top", dy: -1 }),
-    Plot.text(rc, Plot.selectFirst({ fx: "query", text: (d) => ("Query: " + d.query), frameAnchor: "top", dy: -16 })),
+    Plot.axisX({ facetAnchor: null }),
+    Plot.axisY({ facetAnchor: "left", labelAnchor: "center", labelArrow: "none" }),
     Plot.ruleY([0])
   ]
 })

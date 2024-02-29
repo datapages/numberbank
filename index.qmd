@@ -5,7 +5,6 @@ description: |
   Numberbank includes numeracy data from 3200 children across 13 languages around the world. NumberBank operates in collaboration with the ManyNumbers consortium of 100+ international researchers interested in early numerical development.
 title-block-banner: "#859900"
 title-block-banner-color: white
-page-footer: "bem"
 ---
 
 ![](img/dotsLogoStatic.png){width=80%}

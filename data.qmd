@@ -127,6 +127,10 @@ klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
 
 ### Knower levels
 
+::: {.disclaimer}
+{{< include md/disclaimer-kl.md >}}
+:::
+
 __Counts of knower level in each dataset__
 
 ```{ojs}
@@ -201,6 +205,10 @@ Plot.plot({
 
 ### Items
 
+::: {.disclaimer}
+{{< include md/disclaimer-items.md >}}
+:::
+
 ```{ojs}
 trf = tr.filter(d => langs.includes(d.language))
         .filter(d => countries.includes(d.country))
@@ -249,6 +257,10 @@ Plot.plot({
 :::
 
 ## Highest count
+
+::: {.disclaimer}
+{{< include md/disclaimer-hc.md >}}
+:::
 
 __Counts in each dataset__
 

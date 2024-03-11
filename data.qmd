@@ -12,7 +12,11 @@ library(forcats)
 ```
 
 ```{r}
-source("load_data.R")
+# source("load_data.R")
+dataset <- redivis::user("datapages")$dataset("Numberbank")
+hc <- dataset$table("highest count")$to_tibble()
+kld <- dataset$table("knower level")$to_tibble()
+td <- dataset$table("trials")$to_tibble()
 
 # replacement language values
 language_recode <- list(
@@ -24,9 +28,7 @@ language_recode <- list(
 )
 
 kl_data <- kld |>
-  # mutate(kl = kl |> factor() |> fct_relabel(\(l) paste0(l, "-knower")), # add "-knower" to kl
-  #        kl_subset = if_else(kl == "CP-knower", kl, "Subset-knower")) |> # code subset-knowers
-  filter(!is.na(kl) | !is.na(hc)) |> # remove rows with both kl and highest NA
+  filter(!is.na(kl) | !is.na(hc)) |> # remove rows with both kl and hc NA
   mutate(# recode + sort languages
          language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
          # combination of language and country
@@ -42,6 +44,7 @@ trial_data <- td |>
 ```
 
 ```{r}
+ojs_define(hc = hc)
 ojs_define(kl_data = kl_data)
 ojs_define(trial_data = trial_data)
 ```
@@ -125,7 +128,7 @@ klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
 
 ::: {.panel-tabset .nav-pills}
 
-### Knower levels
+### Plots -- Knower levels
 
 ::: {.disclaimer}
 {{< include md/disclaimer-kl.md >}}
@@ -203,7 +206,11 @@ Plot.plot({
 })
 ```
 
-### Items
+### Data -- Knower levels
+
+<iframe width="100%" height="800" allowfullscreen src="https://redivis.com/embed/tables/yfaq-3ejgcvktz"></iframe>
+
+### Plots -- Items
 
 ::: {.disclaimer}
 {{< include md/disclaimer-items.md >}}
@@ -254,9 +261,17 @@ Plot.plot({
 })
 ```
 
+### Data -- Items
+
+<iframe width="100%" height="800" allowfullscreen src="https://redivis.com/embed/tables/4dg4-c1jq71v3c"></iframe>
+
 :::
 
 ## Highest count
+
+::: {.panel-tabset .nav-pills}
+
+### Plots
 
 ::: {.disclaimer}
 {{< include md/disclaimer-hc.md >}}
@@ -362,5 +377,12 @@ Plot.plot({
 })
 ```
 
+### Data
+
+<iframe width="100%" height="800" allowfullscreen src="https://redivis.com/embed/tables/1ts7-1cm8mteff"></iframe>
+
 :::
+
+:::
+
 :::

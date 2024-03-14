@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://datapages.github.io/numberbank/index.html</loc>
-    <lastmod>2024-03-12T17:26:31.086Z</lastmod>
-  </url>
-  <url>
-    <loc>https://datapages.github.io/numberbank/md/disclaimer-hc.html</loc>
-    <lastmod>2024-03-12T17:26:31.086Z</lastmod>
+    <loc>https://datapages.github.io/numberbank/contributors.html</loc>
+    <lastmod>2024-03-14T19:58:03.243Z</lastmod>
   </url>
   <url>
     <loc>https://datapages.github.io/numberbank/md/disclaimer-items.html</loc>
-    <lastmod>2024-03-12T17:26:31.086Z</lastmod>
+    <lastmod>2024-03-14T19:58:03.303Z</lastmod>
   </url>
   <url>
-    <loc>https://datapages.github.io/numberbank/methods.html</loc>
-    <lastmod>2024-03-12T17:26:31.086Z</lastmod>
-  </url>
-  <url>
-    <loc>https://datapages.github.io/numberbank/contributors.html</loc>
-    <lastmod>2024-03-12T17:26:31.022Z</lastmod>
+    <loc>https://datapages.github.io/numberbank/index.html</loc>
+    <lastmod>2024-03-14T19:58:03.303Z</lastmod>
   </url>
   <url>
     <loc>https://datapages.github.io/numberbank/submit.html</loc>
-    <lastmod>2024-03-12T17:26:31.086Z</lastmod>
+    <lastmod>2024-03-14T19:58:03.303Z</lastmod>
   </url>
   <url>
-    <loc>https://datapages.github.io/numberbank/md/disclaimer-kl.html</loc>
-    <lastmod>2024-03-12T17:26:31.086Z</lastmod>
+    <loc>https://datapages.github.io/numberbank/methods.html</loc>
+    <lastmod>2024-03-14T19:58:03.303Z</lastmod>
   </url>
   <url>
     <loc>https://datapages.github.io/numberbank/data.html</loc>
-    <lastmod>2024-03-12T17:26:31.022Z</lastmod>
+    <lastmod>2024-03-14T19:58:03.243Z</lastmod>
+  </url>
+  <url>
+    <loc>https://datapages.github.io/numberbank/md/disclaimer-kl.html</loc>
+    <lastmod>2024-03-14T19:58:03.303Z</lastmod>
+  </url>
+  <url>
+    <loc>https://datapages.github.io/numberbank/md/disclaimer-hc.html</loc>
+    <lastmod>2024-03-14T19:58:03.303Z</lastmod>
   </url>
 </urlset>

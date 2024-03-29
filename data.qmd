@@ -9,6 +9,7 @@ grid:
 library(dplyr)
 library(stringr)
 library(forcats)
+library(glue)
 ```
 
 ```{r}
@@ -27,20 +28,32 @@ language_recode <- list(
   "Slovenian (non-dual)" = c("Slovenian", "Slovenian_nonDual", "Serbian/Slovenian")
 )
 
+languages_countries <- kld |>
+  mutate(# recode + sort languages
+         lang = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
+         # combination of language and country
+         language_country = paste(lang, country, sep = "\n")) |>
+  distinct(language, lang, country, language_country) |>
+  group_by(lang) |>
+  mutate(language_countries = paste(unique(country), collapse = ", "),
+         language_countries = glue("{lang} – {language_countries}")) |>
+  group_by(country) |>
+  mutate(country_languages = paste(unique(lang), collapse = ", "),
+         country_languages = glue("{country} – {country_languages}")) |>
+  ungroup()
+
 kl_data <- kld |>
   filter(!is.na(kl) | !is.na(hc)) |> # remove rows with both kl and hc NA
-  mutate(# recode + sort languages
-         language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
-         # combination of language and country
-         language_country = paste(language, country, sep = "\n")) |>
+  left_join(languages_countries) |> mutate(language = lang) |> select(-lang) |>
   arrange(language, kl, age)
 
 trial_data <- td |>
   mutate(response = if_else(response > 10, 10, response)) |> # cap responses at 10
-  mutate(# recode + sort languages
-         language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
-         # combination of language and country
-         language_country = paste(language, country, sep = "\n"))
+  left_join(languages_countries) |> mutate(language = lang) |> select(-lang)
+  # mutate(# recode + sort languages
+  #        language = language |> fct_collapse(!!!language_recode) |> fct_relevel(sort),
+  #        # combination of language and country
+  #        language_country = paste(language, country, sep = "\n"))
 ```
 
 ```{r}
@@ -56,6 +69,8 @@ import {interval} from '@mootari/range-slider' // two ended slider
 fontFamily = "Source Sans Pro"
 fontSize = ".7rem"
 age_label = "Age (months)"
+filter_error = '<p class="filter-error"><i class="bi bi-exclamation-triangle"></i> No data found for selected filters</p>'
+
 kl = transpose(kl_data)
 tr = transpose(trial_data)
 ```
@@ -91,13 +106,13 @@ viewof kl_sub = Inputs.checkbox(["Group non-CP-knowers together"])
 kl_y = kl_sub.length ? "kl_subset" : "kl"
 
 // language filter
-lang_vals = Array.from(new Set(kl_data.language)).sort() // options
-lang_defs = ["English"] // default
+lang_vals = Array.from(new Set(kl_data.language_countries)).sort() // options
+lang_defs = lang_vals.filter(s => /English/.test(s))
 viewof langs = Inputs.select(lang_vals, {label: "Languages", multiple: true, value: lang_defs})
 
 // country filter
-country_vals = Array.from(new Set(kl_data.country)).sort() // options
-country_defs = ["United States", "India", "Canada"] // default
+country_vals = Array.from(new Set(kl_data.country_languages)).sort() // options
+country_defs = country_vals.filter(s => /English/.test(s))
 viewof countries = Inputs.select(country_vals, {label: "Countries", multiple: true, value: country_defs})
 
 // dataset filter
@@ -108,8 +123,8 @@ viewof datasets = Inputs.select(dataset_vals, {label: "Datasets", multiple: true
 
 ```{ojs}
 // filter data using inputs (except age)
-klf = kl.filter(d => langs.includes(d.language))
-        .filter(d => countries.includes(d.country))
+klf = kl.filter(d => langs.includes(d.language_countries))
+        .filter(d => countries.includes(d.country_languages))
         .filter(d => datasets.includes(d.dataset_id))
         .filter(d => kls.includes(d.kl))
         .filter(d => d.age >= ages[0] && d.age <= ages[1])
@@ -117,8 +132,7 @@ klf = kl.filter(d => langs.includes(d.language))
 // possible kl values in filtered data
 klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
 
-found = klf.length > 0
-found_error = found ? '' : '<p class="filter-error"><i class="bi bi-exclamation-triangle"></i> No data found for selected filters</p>'
+kl_found = klf.length > 0
 ```
 
 :::
@@ -138,13 +152,13 @@ found_error = found ? '' : '<p class="filter-error"><i class="bi bi-exclamation-
 :::
 
 ```{ojs}
-html`${found_error}`
+html`${kl_found ? '' : filter_error}`
 ```
 
 ```{ojs}
 // sample size plot
 ss_margin = 180
-found ? Plot.plot({
+kl_found ? Plot.plot({
   title: "Counts of knower level in each dataset",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: ss_margin,
@@ -158,7 +172,7 @@ found ? Plot.plot({
     )),
     Plot.textX(klf, Plot.stackX(Plot.groupY(
       { x: "count", text: "count" },
-      { y: "dataset_id", z: kl_y, fill: "white", }
+      { y: "dataset_id", z: kl_y, fill: "white" }
     ))),
   ]
 }) : html``
@@ -166,7 +180,7 @@ found ? Plot.plot({
 
 ```{ojs}
 // boxplot
-found ? Plot.plot({
+kl_found ? Plot.plot({
   title: "Distribution of knower level over age",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: 60,
@@ -189,7 +203,7 @@ found ? Plot.plot({
 
 ```{ojs}
 // cumulative probability plot
-found ? Plot.plot({
+kl_found ? Plot.plot({
   title: "Cumulative probability of knower level over age",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginRight: 100,
@@ -221,15 +235,17 @@ found ? Plot.plot({
 :::
 
 ```{ojs}
-html`${found_error}`
-```
-
-```{ojs}
-trf = tr.filter(d => langs.includes(d.language))
-        .filter(d => countries.includes(d.country))
+trf = tr.filter(d => langs.includes(d.language_countries))
+        .filter(d => countries.includes(d.country_languages))
         .filter(d => datasets.includes(d.dataset_id))
         .filter(d => kls.includes(d.kl))
         .filter(d => d.age >= ages[0] && d.age <= ages[1])
+
+tr_found = trf.length > 0
+```
+
+```{ojs}
+html`${tr_found ? '' : filter_error}`
 ```
 
 ```{ojs}
@@ -243,7 +259,7 @@ rc = Array.from(rc_map, ([kl, kl_responses]) =>
   ).flat()
 ).flat()
 
-found ? Plot.plot({
+tr_found ? Plot.plot({
   title: "Distribution of responses by knower level",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   width: 950,
@@ -287,14 +303,17 @@ found ? Plot.plot({
 :::
 
 ```{ojs}
-html`${found_error}`
+hcf = klf.filter(s => s.hc)
+hc_found = hcf.length > 0
 ```
 
 ```{ojs}
-hcf = klf.filter(s => s.hc)
+html`${hc_found ? '' : filter_error}`
+```
 
+```{ojs}
 // sample size plot
-found ? Plot.plot({
+hc_found ? Plot.plot({
   title: "Counts in each dataset",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: ss_margin,
@@ -316,7 +335,7 @@ found ? Plot.plot({
 ```
 
 ```{ojs}
-found ? Plot.plot({
+hc_found ? Plot.plot({
   title: "Highest count over age",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginRight: 100,
@@ -340,7 +359,7 @@ found ? Plot.plot({
 ```
 
 ```{ojs}
-found ? Plot.plot({
+hc_found ? Plot.plot({
   title: "Distribution of highest count",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginRight: 100,
@@ -363,7 +382,7 @@ found ? Plot.plot({
 
 ```{ojs}
 // boxplot
-found ? Plot.plot({
+hc_found ? Plot.plot({
   title: "Distribution of highest count by knower level",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: 60,

@@ -116,6 +116,9 @@ klf = kl.filter(d => langs.includes(d.language))
 
 // possible kl values in filtered data
 klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
+
+found = klf.length > 0
+found_error = found ? '' : '<p class="filter-error"><i class="bi bi-exclamation-triangle"></i> No data found for selected filters</p>'
 ```
 
 :::
@@ -134,12 +137,15 @@ klfv = Array.from(new Set(klf.map(d => d[kl_y]))).sort(cp_sort)
 {{< include md/disclaimer-kl.md >}}
 :::
 
-__Counts of knower level in each dataset__
+```{ojs}
+html`${found_error}`
+```
 
 ```{ojs}
 // sample size plot
 ss_margin = 180
-Plot.plot({
+found ? Plot.plot({
+  title: "Counts of knower level in each dataset",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: ss_margin,
   color: { legend: true, domain: klfv, marginLeft: ss_margin},
@@ -155,14 +161,13 @@ Plot.plot({
       { y: "dataset_id", z: kl_y, fill: "white", }
     ))),
   ]
-})
+}) : html``
 ```
-
-__Distribution of knower level over age__
 
 ```{ojs}
 // boxplot
-Plot.plot({
+found ? Plot.plot({
+  title: "Distribution of knower level over age",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: 60,
   marginRight: 100,
@@ -179,14 +184,13 @@ Plot.plot({
       fill: kl_y
     })
   ]
-})
+}) : html``
 ```
-
-__Cumulative probability of knower level over age__
 
 ```{ojs}
 // cumulative probability plot
-Plot.plot({
+found ? Plot.plot({
+  title: "Cumulative probability of knower level over age",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginRight: 100,
   color: { legend: true, domain: klfv },
@@ -203,7 +207,7 @@ Plot.plot({
       fy: fy
     }))))
   ]
-})
+}) : html``
 ```
 
 ### Data -- Knower levels
@@ -215,6 +219,10 @@ Plot.plot({
 ::: {.disclaimer}
 {{< include md/disclaimer-items.md >}}
 :::
+
+```{ojs}
+html`${found_error}`
+```
 
 ```{ojs}
 trf = tr.filter(d => langs.includes(d.language))
@@ -235,7 +243,8 @@ rc = Array.from(rc_map, ([kl, kl_responses]) =>
   ).flat()
 ).flat()
 
-Plot.plot({
+found ? Plot.plot({
+  title: "Distribution of responses by knower level",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   width: 950,
   height: 120 * rc_map.size,
@@ -258,7 +267,7 @@ Plot.plot({
     Plot.axisY({ facetAnchor: "left", labelAnchor: "center", labelArrow: "none" }),
     Plot.ruleY([0])
   ]
-})
+}) : html``
 ```
 
 ### Data -- Items
@@ -277,13 +286,16 @@ Plot.plot({
 {{< include md/disclaimer-hc.md >}}
 :::
 
-__Counts in each dataset__
+```{ojs}
+html`${found_error}`
+```
 
 ```{ojs}
 hcf = klf.filter(s => s.hc)
 
 // sample size plot
-Plot.plot({
+found ? Plot.plot({
+  title: "Counts in each dataset",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: ss_margin,
   x: { label: "", labelAnchor: "center", labelArrow: "none", axis: "top" },
@@ -300,13 +312,12 @@ Plot.plot({
       { y: "dataset_id", fill: "white", } //order: "sum" }
     ))),
   ]
-})
+}) : html``
 ```
 
-__Highest count over age__
-
 ```{ojs}
-Plot.plot({
+found ? Plot.plot({
+  title: "Highest count over age",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginRight: 100,
   //color: { legend: true, domain: klfv },
@@ -325,13 +336,12 @@ Plot.plot({
       fy: fy
     })
   ]
-})
+}) : html``
 ```
 
-__Distribution of highest count__
-
 ```{ojs}
-Plot.plot({
+found ? Plot.plot({
+  title: "Distribution of highest count",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginRight: 100,
   //color: { legend: true, domain: klfv },
@@ -348,14 +358,13 @@ Plot.plot({
       fy: fy
     }))
   ]
-})
+}) : html``
 ```
-
-__Distribution of highest count by knower level__
 
 ```{ojs}
 // boxplot
-Plot.plot({
+found ? Plot.plot({
+  title: "Distribution of highest count by knower level",
   style: { fontFamily: fontFamily, fontSize: fontSize },
   marginLeft: 60,
   marginRight: 100,
@@ -374,7 +383,7 @@ Plot.plot({
       fill: kl_y
     })
   ]
-})
+}) : html``
 ```
 
 ### Data

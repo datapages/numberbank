@@ -3,11 +3,18 @@
 /*-- scss:defaults --*/
 
 /*-- scss:rules --*/
-/*.observablehq--error { display: none; }*/
+.observablehq--error { display: none; }
 
 .disclaimer { 
   font-size: 80%;
   font-style: italic;
+}
+
+.filter-error { 
+  font-size: 90%;
+  font-style: italic;
+  border: 1px solid #dee2e6;
+  padding: 0.25rem;
 }
 
 .tab-pane > p { padding-top: 0em; }
@@ -30,3 +37,10 @@
 }
 
 .nav-link, .nav-link:hover { color: #859900; }
+
+figure > h2 {
+  border-bottom: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1rem;
+}
